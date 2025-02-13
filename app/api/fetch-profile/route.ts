@@ -26,38 +26,27 @@ function isRateLimited() {
 async function getInstagramDP(username: string) {
   const url = `https://www.instagram.com/${username}/`;
   const headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-    "Accept-Language": "en-US,en;q=0.5",
-    "Referer": "https://www.instagram.com/",
-    "DNT": "1",
-    "Connection": "keep-alive",
-    "Upgrade-Insecure-Requests": "1"
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
   };
 
   try {
-    const { data } = await axios.get(url, { 
-      headers,
-      timeout: 5000,
-      maxRedirects: 5
-    });
+    const { data } = await axios.get(url, { headers });
     const $ = cheerio.load(data);
-    
-    // Try multiple meta tag patterns
-    const possibleMetaTags = [
-      "meta[property='og:image']",
-      "meta[property='og:image:secure_url']",
-      "meta[name='twitter:image']"
-    ];
+    const metaTag = $("meta[property='og:image']").attr("content");
 
-    for (const selector of possibleMetaTags) {
-      const metaTag = $(selector).attr("content");
-      if (metaTag) return metaTag;
+    if (metaTag) {
+      return metaTag;
+    }
+    
+    // Try alternative meta tags
+    const altMetaTag = $("meta[property='og:image:secure_url']").attr("content");
+    if (altMetaTag) {
+      return altMetaTag;
     }
 
     return null;
   } catch (error) {
-    console.error("Instagram fetch error:", error.message);
+    console.error("Error fetching Instagram profile picture:", error);
     return null;
   }
 }
@@ -161,10 +150,9 @@ export async function POST(request: Request) {
 
   } catch (error) {
     console.error('Error in fetch-profile route:', error);
-    const fallbackUsername = (error as any)?.username || 'User';
     return NextResponse.json({ 
-      imageUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(fallbackUsername)}&background=ff69b4&color=fff&size=400`,
-      username: fallbackUsername
+      imageUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=ff69b4&color=fff&size=400`,
+      username: cleanUsername 
     });
   }
 }
