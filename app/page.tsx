@@ -82,6 +82,9 @@ export default function Home() {
   const fetchProfileImage = async (username: string) => {
     try {
       console.log(`Fetching profile for ${username} on platform ${formData.platform}`);
+      
+      // Add delay between requests to avoid rate limiting
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       const response = await fetch("/api/fetch-profile", {
         method: "POST",
@@ -94,24 +97,21 @@ export default function Home() {
         }),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error(`Error fetching ${username}'s profile:`, errorData);
-        return getInitialsAvatar(username); // Return generated avatar on error
-      }
-
       const data = await response.json();
-      console.log(`Profile data for ${username}:`, data);
 
-      if (!data.imageUrl) {
-        console.error(`No image URL returned for ${username}`);
-        return getInitialsAvatar(username); // Return generated avatar if no image URL
+      if (response.status === 429) {
+        console.warn('Rate limit exceeded, using fallback avatar');
+        return getInitialsAvatar(username);
       }
 
-      return data.imageUrl;
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch profile');
+      }
+
+      return data.imageUrl || getInitialsAvatar(username);
     } catch (error) {
       console.error(`Error fetching ${username}'s profile image:`, error);
-      return getInitialsAvatar(username); // Return generated avatar on error
+      return getInitialsAvatar(username);
     }
   };
 
