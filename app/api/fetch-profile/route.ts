@@ -152,7 +152,7 @@ export async function POST(request: Request) {
     console.error('Error in fetch-profile route:', error);
     return NextResponse.json({ 
       imageUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=ff69b4&color=fff&size=400`,
-      username: cleanUsername 
+   
     });
   }
 }
