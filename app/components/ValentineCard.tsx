@@ -37,6 +37,14 @@ interface ValentineCardProps {
   flirtMessage: string;
   senderImage?: string;
   partnerImage?: string;
+  theme: {
+    id: string;
+    name: string;
+    background: string;
+    foreground: string;
+    accent: string;
+  };
+  stickers?: string[]; // Optional if you want to include stickers
 }
 
 async function fetchProfileImage(username: string, platform: string) {
@@ -74,6 +82,8 @@ export default function ValentineCard({
   flirtMessage,
   senderImage,
   partnerImage,
+  theme,
+  stickers,
 }: ValentineCardProps) {
   const [senderImgError, setSenderImgError] = useState(false);
   const [partnerImgError, setPartnerImgError] = useState(false);

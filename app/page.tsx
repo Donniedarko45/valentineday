@@ -8,6 +8,24 @@ import HeartBackground from "./components/HeartBackground";
 import SocialShare from "./components/SocialShare";
 import ValentineCard from "./components/ValentineCard";
 
+interface ValentineCardProps {
+  senderUsername: string;
+  partnerUsername: string;
+  platform: 'instagram' | 'x';
+  matchPercentage: number;
+  flirtMessage: string;
+  senderImage?: string;
+  partnerImage?: string;
+  theme: {
+    id: string;
+    name: string;
+    background: string;
+    foreground: string;
+    accent: string;
+  };
+  stickers?: string[]; // Optional if you want to include stickers
+}
+
 export default function Home() {
   const [formData, setFormData] = useState({
     senderUsername: "",
