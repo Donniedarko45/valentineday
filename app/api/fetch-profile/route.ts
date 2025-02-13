@@ -26,8 +26,7 @@ function isRateLimited() {
 async function getInstagramDP(username: string) {
   const url = `https://www.instagram.com/${username}/`;
   const headers = {
-    "User-Agent":
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
   };
 
   try {
@@ -41,7 +40,7 @@ async function getInstagramDP(username: string) {
       return null;
     }
   } catch (error) {
-    console.error("Error fetching data:", error.message);
+    console.error("Error fetching Instagram profile picture:", error.response ? error.response.data : error.message);
     return null;
   }
 }
