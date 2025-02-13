@@ -23,17 +23,17 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'scontent.cdninstagram.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'scontent-*.cdninstagram.com',
+        hostname: 'scontent*.cdninstagram.com',
         pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'instagram.*.fbcdn.net',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'scontent*.fbcdn.net',
         pathname: '/**',
       }
     ]
