@@ -150,9 +150,10 @@ export async function POST(request: Request) {
 
   } catch (error) {
     console.error('Error in fetch-profile route:', error);
+    const fallbackUsername = (error as any)?.username || 'User';
     return NextResponse.json({ 
-      imageUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=ff69b4&color=fff&size=400`,
-   
+      imageUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(fallbackUsername)}&background=ff69b4&color=fff&size=400`,
+      username: fallbackUsername
     });
   }
 }
