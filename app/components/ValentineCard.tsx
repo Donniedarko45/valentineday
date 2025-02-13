@@ -119,15 +119,17 @@ export default function ValentineCard({
         <div className="flex justify-between items-center gap-4">
           <div className="flex flex-col items-center">
             <div className="w-24 h-24 rounded-full overflow-hidden mb-2 bg-pink-800/50 relative border-2 border-pink-500">
-              {senderImage && (
-                <Image
-                  src={senderImage}
-                  alt={senderUsername}
-                  width={96}
-                  height={96}
-                  className="object-cover"
-                />
-              )}
+              <Image
+                src={!senderImgError ? senderImage || getInitialsAvatar(senderUsername) : getInitialsAvatar(senderUsername)}
+                alt={senderUsername}
+                fill
+                sizes="96px"
+                className="object-cover"
+                onError={() => {
+                  setSenderImgError(true);
+                }}
+                priority
+              />
             </div>
             <span className="text-sm text-pink-300">@{senderUsername}</span>
           </div>

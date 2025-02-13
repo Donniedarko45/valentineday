@@ -35,12 +35,18 @@ async function getInstagramDP(username: string) {
     const metaTag = $("meta[property='og:image']").attr("content");
 
     if (metaTag) {
-      return metaTag.replace("s150x150", "s1080x1080"); // High resolution
-    } else {
-      return null;
+      return metaTag;
     }
+    
+    // Try alternative meta tags
+    const altMetaTag = $("meta[property='og:image:secure_url']").attr("content");
+    if (altMetaTag) {
+      return altMetaTag;
+    }
+
+    return null;
   } catch (error) {
-    console.error("Error fetching Instagram profile picture:", error.response ? error.response.data : error.message);
+    console.error("Error fetching Instagram profile picture:", error);
     return null;
   }
 }
@@ -54,6 +60,15 @@ export async function POST(request: Request) {
     }
 
     const cleanUsername = username.replace('@', '').trim();
+
+    // Add environment variable check
+    if (platform === 'x' && !process.env.TWITTER_BEARER_TOKEN) {
+      console.error('Twitter Bearer Token is missing');
+      return NextResponse.json({ 
+        imageUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(cleanUsername)}&background=ff69b4&color=fff&size=400`,
+        username: cleanUsername 
+      });
+    }
 
     // Remove the image fetching logic
     if (platform === 'x') {
@@ -135,9 +150,9 @@ export async function POST(request: Request) {
 
   } catch (error) {
     console.error('Error in fetch-profile route:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch profile' },
-      { status: 500 }
-    );
+    return NextResponse.json({ 
+      imageUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=ff69b4&color=fff&size=400`,
+      username: cleanUsername 
+    });
   }
 }

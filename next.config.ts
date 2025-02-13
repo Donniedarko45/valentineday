@@ -20,6 +20,21 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: '*.cdninstagram.com',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'scontent.cdninstagram.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'scontent-*.cdninstagram.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'instagram.*.fbcdn.net',
+        pathname: '/**',
       }
     ]
   },
